@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Secure Image Steganography</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f3f6fb; }
+    .hero { background: linear-gradient(120deg,#14213d,#28527a); color: white; }
+    .panel { border: 0; border-radius: 16px; box-shadow: 0 8px 28px #14213d12; }
+    .form-control { padding: .75rem; }
+    .muted-note { color: #64748b; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <header class="hero py-5 mb-4">
+    <div class="container">
+      <h1 class="fw-bold">Secure Image Steganography</h1>
+      <p class="mb-0">Hide encrypted messages inside PNG images using AES-256-GCM + LSB.</p>
+    </div>
+  </header>
+
+  <main class="container pb-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{ 'alert-success' if category == 'success' else 'alert-danger' }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <section class="card panel h-100">
+          <div class="card-body p-4">
+            <h2 class="h4 mb-3">1. Hide a message</h2>
+            <form action="{{ url_for('encode') }}" method="post" enctype="multipart/form-data">
+              <label class="form-label" for="encode-image">Cover image (PNG)</label>
+              <input class="form-control mb-3" id="encode-image" type="file" name="image" accept="image/png" required>
+              <label class="form-label" for="message">Secret message</label>
+              <textarea class="form-control mb-3" id="message" name="message" rows="4" maxlength="10000" placeholder="Type your confidential message..." required></textarea>
+              <label class="form-label" for="encode-password">Password (minimum 8 characters)</label>
+              <input class="form-control mb-3" id="encode-password" type="password" name="password" minlength="8" autocomplete="new-password" required>
+              <button class="btn btn-primary w-100" type="submit">Encrypt &amp; Hide Message</button>
+            </form>
+            <p class="muted-note mt-3 mb-0">The browser downloads a new file named <code>stego_image.png</code>.</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-lg-6">
+        <section class="card panel h-100">
+          <div class="card-body p-4">
+            <h2 class="h4 mb-3">2. Extract a message</h2>
+            <form action="{{ url_for('decode') }}" method="post" enctype="multipart/form-data">
+              <label class="form-label" for="decode-image">Stego-image (PNG)</label>
+              <input class="form-control mb-3" id="decode-image" type="file" name="image" accept="image/png" required>
+              <label class="form-label" for="decode-password">Password</label>
+              <input class="form-control mb-3" id="decode-password" type="password" name="password" autocomplete="current-password" required>
+              <button class="btn btn-success w-100" type="submit">Extract &amp; Decrypt Message</button>
+            </form>
+            {% if decoded_message is defined %}
+              <div class="alert alert-success mt-4 mb-0">
+                <strong>Recovered message</strong>
+                <div class="mt-2" style="white-space: pre-wrap; overflow-wrap: anywhere;">{{ decoded_message }}</div>
+              </div>
+            {% endif %}
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="card panel mt-4">
+      <div class="card-body p-4">
+        <h2 class="h5">How it works</h2>
+        <ol class="mb-0">
+          <li>A password-derived key encrypts the message with authenticated AES-256-GCM.</li>
+          <li>The encrypted bytes are embedded in the least significant bits of RGB pixel channels.</li>
+          <li>The decoder reads the stored payload length, extracts the bytes, then authenticates and decrypts them.</li>
+        </ol>
+        <p class="muted-note mt-3 mb-0">Use PNG files. Re-saving through JPEG or image optimization can destroy hidden data. This is an educational project, not a substitute for a reviewed secure communication system.</p>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
