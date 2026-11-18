@@ -2,6 +2,14 @@
 
 A college mini project web application built with Python and Flask. It encrypts a text message with AES-256-GCM, then hides the encrypted bytes inside RGB pixel least-significant bits of a PNG image.
 
+## Screenshots
+
+### Home Page
+![Home Page](screenshots/home.png)
+
+### How it Works
+![How it Works](screenshots/how-it-works.png)
+
 ## Features
 - Hide a text message inside a PNG image.
 - Password-based key derivation with scrypt.
@@ -53,17 +61,7 @@ Open http://127.0.0.1:5000 in your browser.
 - Use a larger image or shorter message if the capacity warning appears.
 - The app limits uploads to 12 MB and messages to 10,000 UTF-8 bytes.
 
-## Suggested viva topics
-1. Difference between cryptography and steganography.
-2. Why encrypt before hiding?
-3. What is the least significant bit?
-4. Why is PNG preferred over JPEG?
-5. What do salt and nonce do?
-6. Why does AES-GCM detect a wrong password or modified ciphertext?
-7. What is PSNR and what does it tell us?
-8. What are the limitations of LSB steganography?
-
-## Academic extension ideas
+## Future Scope
 - Add user accounts and access control.
 - Compare LSB with adaptive or edge-based embedding.
 - Add histogram analysis and a steganalysis warning.
