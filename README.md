@@ -10,6 +10,9 @@ A college mini project web application built with Python and Flask. It encrypts 
 ### How it Works
 ![How it Works](screenshots/how-it-works.png)
 
+### System Architecture
+![System Architecture](screenshots/architecture.png)
+
 ## Features
 - Hide a text message inside a PNG image.
 - Password-based key derivation with scrypt.
